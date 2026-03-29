@@ -7,31 +7,22 @@
  */
 int main(void)
 {
-	unsigned long f1 = 1, f2 = 2, next;
-	unsigned long head1, head2, next_head;
-	unsigned long tail1, tail2, next_tail;
+	unsigned long f1_h = 0, f1_t = 1;
+	unsigned long f2_h = 0, f2_t = 2;
+	unsigned long n_h, n_t;
 	int i;
 
-	/* Phase 1: Normal printing until we hit the overflow limit */
-	for (i = 1; i <= 91; i++)
+	for (i = 1; i <= 98; i++)
 	{
-		printf("%lu, ", f1);
-		next = f1 + f2;
-		f1 = f2;
-		f2 = next;
-	}
+		if (f1_h == 0)
+		{
+			printf("%lu", f1_t);
+		}
+		else
+		{
+			printf("%lu%09lu", f1_h, f1_t);
+		}
 
-	/* Phase 2: Split the massive numbers into Heads and Tails */
-	head1 = f1 / 1000000000;
-	tail1 = f1 % 1000000000;
-	head2 = f2 / 1000000000;
-	tail2 = f2 % 1000000000;
-
-	/* Phase 3: Head/Tail addition for the remaining numbers */
-	for (i = 92; i <= 98; i++)
-	{
-		/* Print the head, then strictly 9 digits of the tail */
-		printf("%lu%09lu", head1, tail1);
 		if (i != 98)
 		{
 			printf(", ");
@@ -41,16 +32,19 @@ int main(void)
 			printf("\n");
 		}
 
-		/* Calculate the next number with carry-over logic */
-		next_tail = tail1 + tail2;
-		next_head = head1 + head2 + (next_tail / 1000000000);
-		next_tail = next_tail % 1000000000;
+		n_t = f1_t + f2_t;
+		n_h = f1_h + f2_h;
 
-		/* Shift variables for the next loop */
-		head1 = head2;
-		tail1 = tail2;
-		head2 = next_head;
-		tail2 = next_tail;
+		if (n_t >= 1000000000UL)
+		{
+			n_h += 1;
+			n_t %= 1000000000UL;
+		}
+
+		f1_h = f2_h;
+		f1_t = f2_t;
+		f2_h = n_h;
+		f2_t = n_t;
 	}
 
 	return (0);
