@@ -16,7 +16,7 @@ int main(void)
 			printf("%lu", f1_t);
 		else
 			printf("%lu%09lu", f1_h, f1_t);
-		
+
 		printf(i != 98 ? ", " : "\n");
 
 		n_t = f1_t + f2_t;
@@ -26,7 +26,7 @@ int main(void)
 			n_h += 1;
 			n_t %= 1000000000UL;
 		}
-		
+
 		f1_h = f2_h;
 		f1_t = f2_t;
 		f2_h = n_h;
