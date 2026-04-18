@@ -1,11 +1,12 @@
-#include "main.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include "main.h"
 
 /**
- * is_digit - checks if a string contains only digits
- * @s: string to check
- * Return: 1 if all digits, 0 otherwise
+ * is_digit - checks if a string contains a non-digit char
+ * @s: string to be evaluated
+ *
+ * Return: 0 if a non-digit is found, 1 otherwise
  */
 int is_digit(char *s)
 {
@@ -23,7 +24,8 @@ int is_digit(char *s)
 /**
  * _strlen - returns the length of a string
  * @s: string to evaluate
- * Return: length
+ *
+ * Return: the length of the string
  */
 int _strlen(char *s)
 {
@@ -47,7 +49,8 @@ void errors(void)
  * main - multiplies two positive numbers
  * @argc: number of arguments
  * @argv: array of arguments
- * Return: always 0
+ *
+ * Return: always 0 (Success)
  */
 int main(int argc, char *argv[])
 {
@@ -63,7 +66,7 @@ int main(int argc, char *argv[])
 	result = malloc(sizeof(int) * len);
 	if (!result)
 		return (1);
-	for (i = 0; i <= len; i++)
+	for (i = 0; i < len; i++)
 		result[i] = 0;
 	for (len1 = len1 - 1; len1 >= 0; len1--)
 	{
@@ -79,15 +82,16 @@ int main(int argc, char *argv[])
 		if (carry > 0)
 			result[len1 + len2 + 1] += carry;
 	}
-	for (i = 0; i < len - 1; i++)
+	for (i = 0; i < len; i++)
 	{
 		if (result[i])
 			a = 1;
 		if (a)
-			_putchar(result[i] + '0');
+			putchar(result[i] + '0');
 	}
-	_putchar(result[len - 1] + '0');
-	_putchar('\n');
+	if (!a)
+		putchar('0');
+	putchar('\n');
 	free(result);
 	return (0);
 }
