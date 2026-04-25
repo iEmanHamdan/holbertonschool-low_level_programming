@@ -16,8 +16,7 @@ int append_text_to_file(const char *filename, char *text_content)
 	if (filename == NULL)
 		return (-1);
 
-	/* O_WRONLY: Open for writing only */
-	/* O_APPEND: The file offset is set to the end of the file prior to each write */
+	/* O_WRONLY: write mode | O_APPEND: set offset to end */
 	fd = open(filename, O_WRONLY | O_APPEND);
 	if (fd == -1)
 		return (-1);
