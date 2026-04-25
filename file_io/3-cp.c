@@ -15,6 +15,37 @@ void close_error(int fd)
 }
 
 /**
+ * copy_file - copies content from one fd to another
+ * @fd_from: source file descriptor
+ * @fd_to: destination file descriptor
+ * @av: argument vector for error naming
+ */
+void copy_file(int fd_from, int fd_to, char **av)
+{
+	ssize_t n_read, n_wrote;
+	char buf[1024];
+
+	while ((n_read = read(fd_from, buf, 1024)) > 0)
+	{
+		n_wrote = write(fd_to, buf, n_read);
+		if (n_wrote == -1 || n_wrote != n_read)
+		{
+			dprintf(STDERR_FILENO, "Error: Can't write to %s\n", av[2]);
+			close_error(fd_from);
+			close_error(fd_to);
+			exit(99);
+		}
+	}
+	if (n_read == -1)
+	{
+		dprintf(STDERR_FILENO, "Error: Can't read from file %s\n", av[1]);
+		close_error(fd_from);
+		close_error(fd_to);
+		exit(98);
+	}
+}
+
+/**
  * main - copies the content of a file to another file
  * @ac: argument count
  * @av: argument vector
@@ -24,8 +55,6 @@ void close_error(int fd)
 int main(int ac, char **av)
 {
 	int fd_from, fd_to;
-	ssize_t n_read, n_wrote;
-	char buf[1024];
 
 	if (ac != 3)
 	{
@@ -45,24 +74,7 @@ int main(int ac, char **av)
 		close_error(fd_from);
 		exit(99);
 	}
-	while ((n_read = read(fd_from, buf, 1024)) > 0)
-	{
-		n_wrote = write(fd_to, buf, n_read);
-		if (n_wrote == -1 || n_wrote != n_read)
-		{
-			dprintf(STDERR_FILENO, "Error: Can't write to %s\n", av[2]);
-			close_error(fd_from);
-			close_error(fd_to);
-			exit(99);
-		}
-	}
-	if (n_read == -1)
-	{
-		dprintf(STDERR_FILENO, "Error: Can't read from file %s\n", av[1]);
-		close_error(fd_from);
-		close_error(fd_to);
-		exit(98);
-	}
+	copy_file(fd_from, fd_to, av);
 	close_error(fd_from);
 	close_error(fd_to);
 	return (0);
