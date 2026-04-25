@@ -11,9 +11,10 @@
  */
 int main(int argc, char *argv[])
 {
-	char password[7], *name;
-	int len = 0, i, v1, v2, v3, v4, v5;
 	char *l = "A-CHRDw87lNS0E9B2TibgpnMVys5XzvtOGJcURVSQ1riXLIpeYAMjkPnOFR-_XJqcT";
+	int len, i, v1, v2, v3, v4;
+	char password[7];
+	char *name;
 
 	if (argc != 2)
 	{
@@ -24,22 +25,18 @@ int main(int argc, char *argv[])
 	name = argv[1];
 	len = strlen(name);
 
-	/* Char 1: Length of username XOR 59 */
 	password[0] = l[(len ^ 59) & 63];
 
-	/* Char 2: Sum of ASCII values XOR 79 */
 	v1 = 0;
 	for (i = 0; i < len; i++)
 		v1 += name[i];
 	password[1] = l[(v1 ^ 79) & 63];
 
-	/* Char 3: Product of ASCII values XOR 85 */
 	v2 = 1;
 	for (i = 0; i < len; i++)
 		v2 *= name[i];
 	password[2] = l[(v2 ^ 85) & 63];
 
-	/* Char 4: Max char XOR 14, used to seed rand() */
 	v3 = name[0];
 	for (i = 0; i < len; i++)
 	{
@@ -49,16 +46,15 @@ int main(int argc, char *argv[])
 	srand(v3 ^ 14);
 	password[3] = l[rand() & 63];
 
-	/* Char 5: Sum of squares of ASCII values XOR 239 */
 	v4 = 0;
 	for (i = 0; i < len; i++)
 		v4 += (name[i] * name[i]);
 	password[4] = l[(v4 ^ 239) & 63];
 
-	/* Char 6: Random seeded by first char XOR 229 */
+	/* FIXED: Advance PRNG state, then call rand() again */
 	for (i = 0; i < name[0]; i++)
-		v5 = rand();
-	password[5] = l[(v5 ^ 229) & 63];
+		rand();
+	password[5] = l[(rand() ^ 229) & 63];
 
 	password[6] = '\0';
 
